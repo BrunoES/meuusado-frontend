@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import { UserContext } from '../../contexts/UserContext';
 import Api from '../../Api';
 
-import BarberLogo from '../../assets/meuUsadoLogo.svg';
+import MULogo from '../../assets/meuUsadoLogo.svg';
 
 export default () => {
 
@@ -45,7 +45,7 @@ export default () => {
 
     return (
         <Container>
-            <BarberLogo width="150%" height="240" />
+            <MULogo width="150%" height="240" />
             <LoadingIcon size="large" color="#FFFFFF" />
         </Container>
     );

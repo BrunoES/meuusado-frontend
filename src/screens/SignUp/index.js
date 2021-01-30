@@ -3,21 +3,22 @@ import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import { UserContext } from '../../contexts/UserContext';
+
 import {
     Container,
     InputArea,
     CustomButton,
     CustomButtonText,
-    SignMessageButton,
-    SignMessageButtonText,
-    SignMessageButtonTextBold
-} from './styles';
+    ActionMessageButton,
+    ActionMessageButtonText,
+    ActionMessageButtonTextBold
+} from '../general/styles';
 
-import SignInput from '../../components/SignInput';
+import TextInput from '../../components/TextInput';
 
 import Api from '../../Api';
 
-import BarberLogo from '../../assets/meuUsadoLogo.svg';
+import MULogo from '../../assets/meuUsadoLogo.svg';
 import PersonIcon from '../../assets/person.svg';
 import EmailIcon from '../../assets/email.svg';
 import LockIcon from '../../assets/lock.svg';
@@ -73,24 +74,24 @@ export default () => {
 
     return (
         <Container>
-            <BarberLogo width="150%" height="240" />
+            <MULogo width="165%" height="264" />
 
             <InputArea>
-                <SignInput
+                <TextInput
                     IconSvg={PersonIcon}
                     placeholder="Digite seu nome"
                     value={nameField}
                     onChangeText={t=>setNameField(t)}
                 />
 
-                <SignInput
+                <TextInput
                     IconSvg={EmailIcon}
                     placeholder="Digite seu e-mail"
                     value={emailField}
                     onChangeText={t=>setEmailField(t)}
                 />
 
-                <SignInput
+                <TextInput
                     IconSvg={LockIcon}
                     placeholder="Digite sua senha"
                     value={passwordField}
@@ -103,10 +104,10 @@ export default () => {
                 </CustomButton>
             </InputArea>
 
-            <SignMessageButton onPress={handleMessageButtonClick}>
-                <SignMessageButtonText>Já possui uma conta?</SignMessageButtonText>
-                <SignMessageButtonTextBold>Faça Login</SignMessageButtonTextBold>
-            </SignMessageButton>
+            <ActionMessageButton onPress={handleMessageButtonClick}>
+                <ActionMessageButtonText>Já possui uma conta?</ActionMessageButtonText>
+                <ActionMessageButtonTextBold>Faça Login</ActionMessageButtonTextBold>
+            </ActionMessageButton>
 
         </Container>
     );

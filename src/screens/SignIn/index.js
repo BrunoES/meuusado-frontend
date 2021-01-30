@@ -9,17 +9,17 @@ import {
     InputArea,
     CustomButton,
     CustomButtonText,
-    SignMessageButton,
-    SignMessageButtonText,
-    SignMessageButtonTextBold
-} from './styles';
+    ActionMessageButton,
+    ActionMessageButtonText,
+    ActionMessageButtonTextBold
+} from '../general/styles';
 
 import Api from '../../Api';
 
-import SignInput from '../../components/SignInput';
+import TextInput from '../../components/TextInput';
 
-//#import BarberLogo from '../../assets/barber.svg';
-import BarberLogo from '../../assets/meuUsadoLogo.svg';
+//#import MULogo from '../../assets/barber.svg';
+import MULogo from '../../assets/meuUsadoLogo.svg';
 import EmailIcon from '../../assets/email.svg';
 import LockIcon from '../../assets/lock.svg';
 
@@ -62,17 +62,17 @@ export default () => {
 
     return (
         <Container>
-            <BarberLogo width="150%" height="240" />
+            <MULogo width="165%" height="264" />
 
             <InputArea>
-                <SignInput
+                <TextInput
                     IconSvg={EmailIcon}
                     placeholder="Digite seu e-mail"
                     value={emailField}
                     onChangeText={t=>setEmailField(t)}
                 />
 
-                <SignInput
+                <TextInput
                     IconSvg={LockIcon}
                     placeholder="Digite sua senha"
                     value={passwordField}
@@ -85,10 +85,10 @@ export default () => {
                 </CustomButton>
             </InputArea>
 
-            <SignMessageButton onPress={handleMessageButtonClick}>
-                <SignMessageButtonText>Ainda não possui uma conta?</SignMessageButtonText>
-                <SignMessageButtonTextBold>Cadastre-se</SignMessageButtonTextBold>
-            </SignMessageButton>
+            <ActionMessageButton onPress={handleMessageButtonClick}>
+                <ActionMessageButtonText>Ainda não possui uma conta?</ActionMessageButtonText>
+                <ActionMessageButtonTextBold>Cadastre-se</ActionMessageButtonTextBold>
+            </ActionMessageButton>
 
         </Container>
     );

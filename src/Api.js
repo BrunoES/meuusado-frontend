@@ -28,13 +28,25 @@ export default {
         return json;
     },
     signUp: async(name, email, password) => {
-        const req = await fetch(`${$BASE_API}/v1/usuario`, {
+        const req = await fetch(`${BASE_API}/v1/usuario`, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({name, email, password})
+        });
+        const json = await req.json();
+        return json;
+    },
+    cadastroAnuncio: async(titulo, descricao, idModelo, valor) => {
+        const req = await fetch(`${BASE_API}/v1/anuncio`, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({titulo, descricao, idModelo, valor})
         });
         const json = await req.json();
         return json;

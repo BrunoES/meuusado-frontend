@@ -24,19 +24,23 @@ export const CustomButtonText = styled.Text`
     color: #FFF;
 `;
 
-export const SignMessageButton = styled.TouchableOpacity`
+export const ActionMessageButton = styled.TouchableOpacity`
     flex-direction: row;
     justify-content: center;
     margin-top: 50px;
     margin-bottom: 20px;
 `;
-export const SignMessageButtonText = styled.Text`
+export const ActionMessageButtonText = styled.Text`
     font-size: 16px;
     color: #268596;
 `;
-export const SignMessageButtonTextBold = styled.Text`
+export const ActionMessageButtonTextBold = styled.Text`
     font-size: 16px;
     color: #268596;
     font-weight: bold;
     margin-left: 5px;
+`;
+export const Logo = styled.Text`
+    margin-top: 5px;
+    margin-bottom: 5px;
 `;
