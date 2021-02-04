@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Text } from 'react-native';
+import { Text, PermissionsAndroid, } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -14,6 +14,12 @@ import {
     ActionMessageButtonTextBold,
     Logo
 } from '../general/styles';
+
+//import ImagePicker from 'react-native-image-picker';
+import {
+    launchCamera,
+    launchImageLibrary
+  } from 'react-native-image-picker';
 
 import TextInput from '../../components/TextInput';
 
@@ -33,6 +39,37 @@ export default () => {
     const [marcaField, setMarcaField] = useState('');
     const [modeloField, setModeloField] = useState('');
     const [valorField, setValorField] = useState('');
+
+   // https://aboutreact.com/example-of-image-picker-in-react-native/
+
+    function getImages() {
+        if(requestCameraPermission()) {
+            launchCamera({}, imagePickerCallback);
+        }
+    }
+
+    const requestCameraPermission = async () => {
+        if (Platform.OS === 'android') {
+          try {
+            const granted = await PermissionsAndroid.request(
+              PermissionsAndroid.PERMISSIONS.CAMERA,
+              {
+                title: 'Camera Permission',
+                message: 'App needs camera permission',
+              },
+            );
+            // If CAMERA Permission is granted
+            return granted === PermissionsAndroid.RESULTS.GRANTED;
+          } catch (err) {
+            console.warn(err);
+            return false;
+          }
+        } else return true;
+    };
+
+    function imagePickerCallback(data) {
+        console.log(data);
+    }
 
     const handleCadastroAnuncioClick = async () => {
         if(tituloField != '' && descricaoField != '' && marcaField != '' && modeloField != '' && valorField != '') {
@@ -68,7 +105,30 @@ export default () => {
             alert("Preencha os campos");
         }
     }
-
+/*
+    const requestCameraPermission = async () => {
+        try {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.CAMERA,
+            {
+              title: "App Camera Permission",
+              message:"App needs access to your camera ",
+              buttonNeutral: "Ask Me Later",
+              buttonNegative: "Cancel",
+              buttonPositive: "OK"
+            }
+          );
+          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+            console.log("Camera permission given");
+            launchCamera({}, imagePickerCallback)
+          } else {
+            console.log("Camera permission denied");
+          }
+        } catch (err) {
+          console.warn(err);
+        }
+      };
+*/
     const handleMessageButtonClick = () => {
         navigation.reset({
             routes: [{name: 'SignIn'}]
@@ -114,6 +174,10 @@ export default () => {
                     value={valorField}
                     onChangeText={t=>setValorField(t)}
                 />
+
+                <CustomButton onPress={() => getImages()}>
+                    <CustomButtonText>Escolher Imagens</CustomButtonText>
+                </CustomButton>
 
                 <CustomButton onPress={handleCadastroAnuncioClick}>
                     <CustomButtonText>CADASTRAR</CustomButtonText>
