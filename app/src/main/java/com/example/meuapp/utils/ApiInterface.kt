@@ -12,6 +12,7 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 interface ApiInterface {
 
@@ -29,5 +30,8 @@ interface ApiInterface {
 
     @POST("api/v1/anuncio")
     fun cadastrarAnuncio(@Body cadastroAnuncioDTO: CadastroAnuncioDTO) : Call<AnuncioResponseDTO>
+
+    @GET("api/v1/anuncio/{anuncioId}")
+    fun buscaDetalhesAnuncio(@Path("anuncioId") anuncioId: Int) : Call<AnuncioResponseDTO>
 
 }

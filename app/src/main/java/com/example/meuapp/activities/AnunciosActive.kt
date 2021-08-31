@@ -19,6 +19,7 @@ import retrofit2.Response
 
 class AnunciosActive : AppCompatActivity() {
     private val USER_ID = "user_id"
+
     private var itemsList = ArrayList<AnuncioItem>()
 
     lateinit var btn_cadastrarAnuncio: Button
@@ -42,8 +43,12 @@ class AnunciosActive : AppCompatActivity() {
 
         btn_cadastrarAnuncio.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
-                val intent = Intent(this@AnunciosActive, CadastroAnuncioActive::class.java).apply {
+                /*val intent = Intent(this@AnunciosActive, CadastroAnuncioActive::class.java).apply {
                     putExtra(USER_ID, "1")
+                }
+                startActivity(intent)*/
+                val intent = Intent(this@AnunciosActive, DetalheAnuncio::class.java).apply {
+                    putExtra("anuncio_id", "18")
                 }
                 startActivity(intent)
             }
@@ -74,7 +79,7 @@ class AnunciosActive : AppCompatActivity() {
                     Toast.makeText(applicationContext, "Anúncios buscados com sucesso.", Toast.LENGTH_LONG).show()
                     println("Response--")
                     response.body()?.forEach({
-                        x -> itemsList.add(AnuncioItem(x.titulo, x.base64ImgPrincMin))
+                        x -> itemsList.add(AnuncioItem(x.titulo, x.base64ImgPrincMin, x.valor))
                     })
                     println("Response--")
                     println(itemsList.size)

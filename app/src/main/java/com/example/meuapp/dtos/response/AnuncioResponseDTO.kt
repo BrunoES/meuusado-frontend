@@ -17,5 +17,7 @@ data class AnuncioResponseDTO(
     @SerializedName("valor")
     val valor: Float,
     @SerializedName("dataCriacao")
-    val dataCriacao: Date
+    val dataCriacao: Date,
+    @SerializedName("base64Imagem")
+    val base64Imagem: String
 )

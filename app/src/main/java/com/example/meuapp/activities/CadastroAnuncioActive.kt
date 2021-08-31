@@ -111,24 +111,23 @@ class CadastroAnuncioActive : AppCompatActivity() {
         Toast.makeText(applicationContext, "Chamou API de Cadastro 1", Toast.LENGTH_LONG).show()
 
         val retrofitBuilder = Retrofit2Api.getBuilder()
+        var encodedfile : String = ""
 
         val valorConversao : String
         valorConversao = valor.text.toString()
 
-
-
-        val bitmapDrawable : BitmapDrawable = image_view.getDrawable() as BitmapDrawable
-        val bitmap : Bitmap = bitmapDrawable.getBitmap()
-        val stream : ByteArrayOutputStream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-
+        if(image_view.getDrawable() != null) {
+            val bitmapDrawable : BitmapDrawable = image_view.getDrawable() as BitmapDrawable
+            val bitmap : Bitmap = bitmapDrawable.getBitmap()
+            val stream : ByteArrayOutputStream = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            encodedfile = Base64.getEncoder().encodeToString(stream.toByteArray())
+        }
 
         /*var byte[] imageInByte = stream.toByteArray()
         ByteArrayInputStream bis = new ByteArrayInputStream(imageInByte);
         stream.toByteArray()
         */
-
-        val encodedfile : String = Base64.getEncoder().encodeToString(stream.toByteArray())
 
         println("Base64")
         println(encodedfile)
