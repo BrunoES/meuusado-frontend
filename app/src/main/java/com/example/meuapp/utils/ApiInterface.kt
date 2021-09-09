@@ -4,10 +4,7 @@ import com.example.meuapp.items.MyDataItem
 import com.example.meuapp.dtos.request.CadastroAnuncioDTO
 import com.example.meuapp.dtos.request.CadastroUsuarioDTO
 import com.example.meuapp.dtos.request.LoginDTO
-import com.example.meuapp.dtos.response.AnuncioResponseDTO
-import com.example.meuapp.dtos.response.AnuncioResumidoResponseDTO
-import com.example.meuapp.dtos.response.LoginResponseDTO
-import com.example.meuapp.dtos.response.UsuarioResponseDTO
+import com.example.meuapp.dtos.response.*
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -33,5 +30,11 @@ interface ApiInterface {
 
     @GET("api/v1/anuncio/{anuncioId}")
     fun buscaDetalhesAnuncio(@Path("anuncioId") anuncioId: Int) : Call<AnuncioResponseDTO>
+
+    @GET("api/v1/marca")
+    fun buscarMarcas() : Call<List<MarcaResponseDTO>>
+
+    @GET("api/v1/modelo/marca/{marcaId}")
+    fun buscarModelosPorMarca(@Path("marcaId") marcaId : Long) : Call<List<ModeloResponseDTO>>
 
 }

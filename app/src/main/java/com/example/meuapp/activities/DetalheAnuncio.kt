@@ -17,6 +17,7 @@ import com.example.meuapp.R
 import com.example.meuapp.dtos.request.CadastroUsuarioDTO
 import com.example.meuapp.dtos.response.AnuncioResponseDTO
 import com.example.meuapp.dtos.response.UsuarioResponseDTO
+import com.example.meuapp.utils.Constants
 import com.example.meuapp.utils.Retrofit2Api
 import retrofit2.Call
 import retrofit2.Callback
@@ -69,12 +70,21 @@ class DetalheAnuncio : AppCompatActivity() {
                 @RequiresApi(Build.VERSION_CODES.O)
                 override fun onResponse(call: Call<AnuncioResponseDTO>, response: Response<AnuncioResponseDTO>) {
                     var response = response.body()
+                    var base64Imagem = ""
+                    if (response != null) {
+                        if (response.base64Imagem.isNullOrEmpty()) {
+                            base64Imagem = Constants.BLANK_IMAGE
+                        } else {
+                            base64Imagem = response.base64Imagem
+                        }
+                    }
+
                     if (response != null) {
                         valor.setText(response.valor.toString())
                         titulo.setText(response.titulo)
                         descricao.setText(response.descricao)
 
-                        var byteImage : ByteArray? = Base64.getDecoder().decode(response.base64Imagem)
+                        var byteImage : ByteArray? = Base64.getDecoder().decode(base64Imagem)
                         var image: Drawable = BitmapDrawable(byteImage?.let { BitmapFactory.decodeByteArray(byteImage, 0, it.size) })
 
                         image_view.setImageDrawable(image)

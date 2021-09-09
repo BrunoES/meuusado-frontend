@@ -6,16 +6,19 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.os.Build
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.Toast
+import android.view.View
+import android.widget.*
 import androidx.annotation.RequiresApi
+import androidx.core.view.get
 import com.example.meuapp.MainActivity
 import com.example.meuapp.R
 
 import com.example.meuapp.dtos.response.AnuncioResponseDTO
 import com.example.meuapp.dtos.request.CadastroAnuncioDTO
+import com.example.meuapp.dtos.response.AnuncioResumidoResponseDTO
+import com.example.meuapp.dtos.response.MarcaResponseDTO
+import com.example.meuapp.dtos.response.ModeloResponseDTO
+import com.example.meuapp.recicleviews.items.AnuncioItem
 import com.example.meuapp.utils.Retrofit2Api
 import retrofit2.Call
 import retrofit2.Callback
@@ -35,6 +38,8 @@ class CadastroAnuncioActive : AppCompatActivity() {
     lateinit var btn_add_imagem_cadastro_anuncio: Button
     lateinit var btn_salvar_cadastro_anuncio: Button
     lateinit var image_view: ImageView
+    lateinit var spinner_marca_cadastro_anuncio: Spinner
+    lateinit var spinner_modelo_cadastro_anuncio: Spinner
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,6 +53,21 @@ class CadastroAnuncioActive : AppCompatActivity() {
         btn_add_imagem_cadastro_anuncio = findViewById(R.id.btn_add_imagem_cadastro_anuncio)
         btn_salvar_cadastro_anuncio = findViewById(R.id.btn_salvar_cadastro_anuncio)
         image_view = findViewById(R.id.imageView)
+        spinner_marca_cadastro_anuncio = findViewById(R.id.spinner_marca_cadastro_anuncio)
+        spinner_modelo_cadastro_anuncio = findViewById(R.id.spinner_modelo_cadastro_anuncio)
+
+        spinner_marca_cadastro_anuncio.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                Toast.makeText(applicationContext, parent.getItemAtPosition(position).toString(), Toast.LENGTH_LONG).show()
+                var marca: MarcaResponseDTO = parent.getItemAtPosition(position) as MarcaResponseDTO
+                buscarModelos(marca.idMarca)
+            // selectedMarca = muscleGroups[position]
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+
+            }
+        }
 
         btn_add_imagem_cadastro_anuncio.setOnClickListener {
             pickImageFromGallery();
@@ -69,6 +89,8 @@ class CadastroAnuncioActive : AppCompatActivity() {
             cadastroAnuncio()
         }
 
+        buscarMarcas()
+        //buscarModelos(37L)
     }
 
     private fun pickImageFromGallery() {
@@ -103,6 +125,68 @@ class CadastroAnuncioActive : AppCompatActivity() {
         if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE) {
             image_view.setImageURI(data?.data)
         }
+    }
+
+    private fun buscarMarcas() {
+        val listSpinner: MutableList<MarcaResponseDTO> = ArrayList<MarcaResponseDTO>()
+        var arrayAdapterMarca : ArrayAdapter<MarcaResponseDTO> = ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, listSpinner)
+
+        Toast.makeText(applicationContext, "Chamou API de Busca de Marcas 1", Toast.LENGTH_LONG).show()
+
+        val retrofitBuilder = Retrofit2Api.getBuilder()
+        val retrofitData = retrofitBuilder.buscarMarcas()
+
+        retrofitData.enqueue(
+            object : Callback<List<MarcaResponseDTO>> {
+                override fun onFailure(call: Call<List<MarcaResponseDTO>>, t: Throwable) {
+                    Toast.makeText(applicationContext, "Falha ao chamar API de Busca de Marcas", Toast.LENGTH_LONG).show()
+                }
+                override fun onResponse(call: Call<List<MarcaResponseDTO>>, response: Response<List<MarcaResponseDTO>>) {
+                    Toast.makeText(applicationContext, "Marcas buscadas com sucesso.", Toast.LENGTH_LONG).show()
+                    println("Response--")
+                    response.body()?.forEach({
+                        x -> listSpinner.add(x)
+                    })
+
+                    println("Response--")
+                    println(response.body())
+                    println("Response--")
+
+                    spinner_marca_cadastro_anuncio.adapter = arrayAdapterMarca
+                }
+            }
+        )
+    }
+
+    private fun buscarModelos(idMarca : Long) {
+        val listSpinner: MutableList<String> = ArrayList<String>()
+        var arrayAdapterModelo : ArrayAdapter<String> = ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, listSpinner)
+
+        Toast.makeText(applicationContext, "Chamou API de Busca de Marcas 1", Toast.LENGTH_LONG).show()
+
+        val retrofitBuilder = Retrofit2Api.getBuilder()
+        val retrofitData = retrofitBuilder.buscarModelosPorMarca(idMarca)
+
+        retrofitData.enqueue(
+            object : Callback<List<ModeloResponseDTO>> {
+                override fun onFailure(call: Call<List<ModeloResponseDTO>>, t: Throwable) {
+                    Toast.makeText(applicationContext, "Falha ao chamar API de Busca de Modelos", Toast.LENGTH_LONG).show()
+                }
+                override fun onResponse(call: Call<List<ModeloResponseDTO>>, response: Response<List<ModeloResponseDTO>>) {
+                    Toast.makeText(applicationContext, "Modelos buscadas com sucesso.", Toast.LENGTH_LONG).show()
+                    println("Response--")
+                    response.body()?.forEach({
+                        x -> listSpinner.add(x.nomeModelo)
+                    })
+
+                    println("Response--")
+                    println(response.body())
+                    println("Response--")
+
+                    spinner_modelo_cadastro_anuncio.adapter = arrayAdapterModelo
+                }
+            }
+        )
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

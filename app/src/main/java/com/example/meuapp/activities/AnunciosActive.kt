@@ -17,7 +17,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class AnunciosActive : AppCompatActivity() {
+class AnunciosActive : AppCompatActivity(), CustomAdapter.OnItemClickListener {
     private val USER_ID = "user_id"
 
     private var itemsList = ArrayList<AnuncioItem>()
@@ -33,7 +33,7 @@ class AnunciosActive : AppCompatActivity() {
 
         val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
 
-        customAdapter = CustomAdapter(itemsList)
+        customAdapter = CustomAdapter(itemsList, this)
         val layoutManager = LinearLayoutManager(applicationContext)
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = customAdapter
@@ -43,16 +43,20 @@ class AnunciosActive : AppCompatActivity() {
 
         btn_cadastrarAnuncio.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
-                /*val intent = Intent(this@AnunciosActive, CadastroAnuncioActive::class.java).apply {
+                val intent = Intent(this@AnunciosActive, CadastroAnuncioActive::class.java).apply {
                     putExtra(USER_ID, "1")
-                }
-                startActivity(intent)*/
-                val intent = Intent(this@AnunciosActive, DetalheAnuncio::class.java).apply {
-                    putExtra("anuncio_id", "18")
                 }
                 startActivity(intent)
             }
         })
+    }
+
+    override fun onItemClick(position: Int) {
+        //customAdapter.notifyItemChanged(position) ? Precisa ?;
+        val intent = Intent(this@AnunciosActive, DetalheAnuncio::class.java).apply {
+            putExtra("anuncio_id", itemsList.get(position).idAnuncio.toString())
+        }
+        startActivity(intent)
     }
 
     private fun prepareItems() {
@@ -79,7 +83,7 @@ class AnunciosActive : AppCompatActivity() {
                     Toast.makeText(applicationContext, "Anúncios buscados com sucesso.", Toast.LENGTH_LONG).show()
                     println("Response--")
                     response.body()?.forEach({
-                        x -> itemsList.add(AnuncioItem(x.titulo, x.base64ImgPrincMin, x.valor))
+                        x -> itemsList.add(AnuncioItem(x.idAnuncio, x.titulo, x.base64ImgPrincMin, x.valor))
                     })
                     println("Response--")
                     println(itemsList.size)
