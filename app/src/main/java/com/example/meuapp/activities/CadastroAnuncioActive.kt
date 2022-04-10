@@ -159,8 +159,8 @@ class CadastroAnuncioActive : AppCompatActivity() {
     }
 
     private fun buscarModelos(idMarca : Long) {
-        val listSpinner: MutableList<String> = ArrayList<String>()
-        var arrayAdapterModelo : ArrayAdapter<String> = ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, listSpinner)
+        val listSpinner: MutableList<ModeloResponseDTO> = ArrayList<ModeloResponseDTO>()
+        var arrayAdapterModelo : ArrayAdapter<ModeloResponseDTO> = ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, listSpinner)
 
         Toast.makeText(applicationContext, "Chamou API de Busca de Marcas 1", Toast.LENGTH_LONG).show()
 
@@ -176,7 +176,7 @@ class CadastroAnuncioActive : AppCompatActivity() {
                     Toast.makeText(applicationContext, "Modelos buscadas com sucesso.", Toast.LENGTH_LONG).show()
                     println("Response--")
                     response.body()?.forEach({
-                        x -> listSpinner.add(x.nomeModelo)
+                        x -> listSpinner.add(x)
                     })
 
                     println("Response--")

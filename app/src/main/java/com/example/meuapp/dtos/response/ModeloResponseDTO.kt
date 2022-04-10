@@ -10,5 +10,10 @@ data class ModeloResponseDTO(
     @SerializedName("idMarca")
     val idMarca: Long,
     @SerializedName("nomeMarca")
-    val nomeMarca: String
+    val nomeMarca: String,
 )
+{
+    override fun toString(): String {
+        return nomeModelo;
+    }
+}
