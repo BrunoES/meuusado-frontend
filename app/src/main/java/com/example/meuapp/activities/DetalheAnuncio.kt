@@ -22,6 +22,7 @@ import com.example.meuapp.utils.Retrofit2Api
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.text.NumberFormat
 import java.util.*
 
 class DetalheAnuncio : AppCompatActivity() {
@@ -80,7 +81,7 @@ class DetalheAnuncio : AppCompatActivity() {
                     }
 
                     if (response != null) {
-                        valor.setText(response.valor.toString())
+                        valor.setText("R$ " + NumberFormat.getNumberInstance(Locale.US).format(response.valor).toString().replace(",", "."))
                         titulo.setText(response.titulo)
                         descricao.setText(response.descricao)
 

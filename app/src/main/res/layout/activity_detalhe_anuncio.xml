@@ -21,7 +21,12 @@
         android:id="@+id/txt_valor_detalhe_anuncio"
         android:layout_width="381dp"
         android:layout_height="37dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginRight="12dp"
+        android:fontFamily="@font/amiko"
+        android:text="R$ 25.000"
+        android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/img_detalhe_anuncio" />
 
@@ -30,6 +35,11 @@
         android:layout_width="381dp"
         android:layout_height="37dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginRight="12dp"
+        android:fontFamily="@font/amiko"
+        android:text="teste"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt_valor_detalhe_anuncio" />
 
@@ -37,7 +47,12 @@
         android:id="@+id/txt_descricao_detalhe_anuncio"
         android:layout_width="381dp"
         android:layout_height="101dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginRight="12dp"
+        android:fontFamily="@font/amiko"
+        android:text="Carro muito bom pouco rodado."
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt_titulo_detalhe_anuncio" />
 </androidx.constraintlayout.widget.ConstraintLayout>

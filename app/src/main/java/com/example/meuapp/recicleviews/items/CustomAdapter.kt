@@ -20,6 +20,7 @@ import android.graphics.BitmapFactory
 import com.example.meuapp.activities.AnunciosActive
 import com.example.meuapp.activities.DetalheAnuncio
 import com.example.meuapp.utils.Constants
+import java.text.NumberFormat
 
 
 class CustomAdapter(private val dataSet: List<AnuncioItem>,
@@ -84,7 +85,7 @@ class CustomAdapter(private val dataSet: List<AnuncioItem>,
 
         viewHolder.textView.text = dataSet.get(position).titulo
         viewHolder.image_view_item.setImageDrawable(image)
-        viewHolder.valorTextView.text = dataSet.get(position).valor.toString()
+        viewHolder.valorTextView.text = "R$ " + NumberFormat.getNumberInstance(Locale.US).format(dataSet.get(position).valor).toString().replace(",", ".")
     }
 
     // Return the size of your dataset (invoked by the layout manager)
