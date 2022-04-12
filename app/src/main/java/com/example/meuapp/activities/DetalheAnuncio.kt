@@ -30,6 +30,7 @@ class DetalheAnuncio : AppCompatActivity() {
     lateinit var valor: TextView
     lateinit var titulo: TextView
     lateinit var descricao: TextView
+    lateinit var txt_ano_detalhe_anuncio: TextView
     lateinit var image_view: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,6 +40,7 @@ class DetalheAnuncio : AppCompatActivity() {
         valor = findViewById(R.id.txt_valor_detalhe_anuncio)
         titulo = findViewById(R.id.txt_titulo_detalhe_anuncio)
         descricao = findViewById(R.id.txt_descricao_detalhe_anuncio)
+        txt_ano_detalhe_anuncio = findViewById(R.id.txt_ano_detalhe_anuncio)
         image_view = findViewById(R.id.img_detalhe_anuncio)
 
         val anuncioId = intent.getStringExtra("anuncio_id")
@@ -84,6 +86,7 @@ class DetalheAnuncio : AppCompatActivity() {
                         valor.setText("R$ " + NumberFormat.getNumberInstance(Locale.US).format(response.valor).toString().replace(",", "."))
                         titulo.setText(response.titulo)
                         descricao.setText(response.descricao)
+                        txt_ano_detalhe_anuncio.setText(response.ano.toString())
 
                         var byteImage : ByteArray? = Base64.getDecoder().decode(base64Imagem)
                         var image: Drawable = BitmapDrawable(byteImage?.let { BitmapFactory.decodeByteArray(byteImage, 0, it.size) })

@@ -38,6 +38,7 @@ class CadastroAnuncioActive : AppCompatActivity() {
     lateinit var btn_add_imagem_cadastro_anuncio: Button
     lateinit var btn_salvar_cadastro_anuncio: Button
     lateinit var image_view: ImageView
+    lateinit var spinner_ano_cadastro_anuncio: Spinner
     lateinit var spinner_marca_cadastro_anuncio: Spinner
     lateinit var spinner_modelo_cadastro_anuncio: Spinner
 
@@ -53,6 +54,7 @@ class CadastroAnuncioActive : AppCompatActivity() {
         btn_add_imagem_cadastro_anuncio = findViewById(R.id.btn_add_imagem_cadastro_anuncio)
         btn_salvar_cadastro_anuncio = findViewById(R.id.btn_salvar_cadastro_anuncio)
         image_view = findViewById(R.id.imageView)
+        spinner_ano_cadastro_anuncio = findViewById(R.id.spinner_ano_cadastro_anuncio)
         spinner_marca_cadastro_anuncio = findViewById(R.id.spinner_marca_cadastro_anuncio)
         spinner_modelo_cadastro_anuncio = findViewById(R.id.spinner_modelo_cadastro_anuncio)
 
@@ -90,6 +92,7 @@ class CadastroAnuncioActive : AppCompatActivity() {
         }
 
         buscarMarcas()
+        alimentaAnos()
         //buscarModelos(37L)
     }
 
@@ -125,6 +128,15 @@ class CadastroAnuncioActive : AppCompatActivity() {
         if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE) {
             image_view.setImageURI(data?.data)
         }
+    }
+
+    private fun alimentaAnos() {
+        val listSpinner: MutableList<Integer> = ArrayList<Integer>()
+        var arrayAdapterMarca : ArrayAdapter<Integer> = ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, listSpinner)
+        for(i in 1950..Calendar.getInstance().get(Calendar.YEAR)) {
+            listSpinner.add(Integer(i))
+        }
+        spinner_ano_cadastro_anuncio.adapter = arrayAdapterMarca
     }
 
     private fun buscarMarcas() {
@@ -217,7 +229,8 @@ class CadastroAnuncioActive : AppCompatActivity() {
         println(encodedfile)
         println("Base64")
 
-        val cadastroAnuncioDTO = CadastroAnuncioDTO(1L, 1L, titulo.text.toString(), descricao.text.toString(),  valorConversao.toFloat(), encodedfile)
+        val cadastroAnuncioDTO = CadastroAnuncioDTO(1L, 1L, titulo.text.toString(), descricao.text.toString(),
+            spinner_ano_cadastro_anuncio.selectedItem as Int, valorConversao.toFloat(), encodedfile)
         val retrofitData = retrofitBuilder.cadastrarAnuncio(cadastroAnuncioDTO)
 
         println("LogInfoInicioCad")

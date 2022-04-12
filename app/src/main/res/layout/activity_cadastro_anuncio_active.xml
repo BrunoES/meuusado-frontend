@@ -22,12 +22,12 @@
         android:id="@+id/txt_valor_cadastro_anuncio"
         android:layout_width="298dp"
         android:layout_height="50dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="24dp"
         android:ems="10"
         android:hint="Valor"
         android:inputType="numberDecimal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.522"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinner_modelo_cadastro_anuncio" />
 
@@ -35,12 +35,11 @@
         android:id="@+id/btn_salvar_cadastro_anuncio"
         android:layout_width="304dp"
         android:layout_height="55dp"
-        android:layout_marginTop="20dp"
         android:text="Salvar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.532"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_valor_cadastro_anuncio" />
+        tools:layout_editor_absoluteY="587dp" />
 
     <Button
         android:id="@+id/btn_add_imagem_cadastro_anuncio"
@@ -69,7 +68,7 @@
     <EditText
         android:id="@+id/txt_descricao_cadastro_anuncio"
         android:layout_width="292dp"
-        android:layout_height="153dp"
+        android:layout_height="127dp"
         android:layout_marginTop="16dp"
         android:ems="10"
         android:gravity="start|top"
@@ -81,19 +80,30 @@
 
     <Spinner
         android:id="@+id/spinner_marca_cadastro_anuncio"
-        android:layout_width="409dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_width="297dp"
+        android:layout_height="21dp"
+        android:layout_marginTop="72dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt_descricao_cadastro_anuncio" />
 
     <Spinner
-        android:id="@+id/spinner_modelo_cadastro_anuncio"
-        android:layout_width="409dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
+        android:id="@+id/spinner_ano_cadastro_anuncio"
+        android:layout_width="293dp"
+        android:layout_height="23dp"
+        android:layout_marginTop="28dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.489"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_descricao_cadastro_anuncio" />
+
+    <Spinner
+        android:id="@+id/spinner_modelo_cadastro_anuncio"
+        android:layout_width="296dp"
+        android:layout_height="19dp"
+        android:layout_marginTop="116dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt_descricao_cadastro_anuncio" />
 

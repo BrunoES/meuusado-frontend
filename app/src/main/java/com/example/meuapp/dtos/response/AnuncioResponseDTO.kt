@@ -14,6 +14,8 @@ data class AnuncioResponseDTO(
     val titulo: String,
     @SerializedName("descricao")
     val descricao: String,
+    @SerializedName("ano")
+    val ano: Int,
     @SerializedName("valor")
     val valor: Float,
     @SerializedName("dataCriacao")

@@ -11,6 +11,8 @@ data class CadastroAnuncioDTO(
     val titulo: String,
     @SerializedName("descricao")
     val descricao: String,
+    @SerializedName("ano")
+    val ano: Int,
     @SerializedName("valor")
     val valor: Float,
     @SerializedName("base64Imagem")
