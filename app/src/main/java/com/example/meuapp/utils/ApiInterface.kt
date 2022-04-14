@@ -19,7 +19,7 @@ interface ApiInterface {
     @GET("api/v1/anuncio")
     fun buscarAnuncios() : Call<List<AnuncioResumidoResponseDTO>>
 
-    @GET("api/v1/anuncio")
+    @GET("api/v1/anuncio/filter/{query}")
     fun buscarAnuncios(@Path("query") query: String) : Call<List<AnuncioResumidoResponseDTO>>
 
     @POST("api/v1/login")

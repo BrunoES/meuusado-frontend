@@ -56,12 +56,12 @@ class AnunciosActive : AppCompatActivity(), CustomAdapter.OnItemClickListener {
         })
 
         txt_pesquisa_anuncios.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextChange(newText: String): Boolean {
-                Toast.makeText(applicationContext, "Change Pesquisando Anúncios com Filtro: " + String, Toast.LENGTH_LONG).show()
+            override fun onQueryTextChange(query: String): Boolean {
+                Toast.makeText(applicationContext, "Change Pesquisando Anúncios com Filtro: " + query, Toast.LENGTH_LONG).show()
                 return false
             }
             override fun onQueryTextSubmit(query: String): Boolean {
-                Toast.makeText(applicationContext, "Pesquisando Anúncios com Filtro: " + String, Toast.LENGTH_LONG).show()
+                Toast.makeText(applicationContext, "Pesquisando Anúncios com Filtro: " + query, Toast.LENGTH_LONG).show()
                 buscaAnuncios(query)
                 return true
             }
@@ -91,6 +91,7 @@ class AnunciosActive : AppCompatActivity(), CustomAdapter.OnItemClickListener {
         val retrofitBuilder = Retrofit2Api.getBuilder()
         val retrofitData = retrofitBuilder.buscarAnuncios()
 
+        itemsList.clear()
         retrofitData.enqueue(
             object : Callback<List<AnuncioResumidoResponseDTO>> {
                 override fun onFailure(call: Call<List<AnuncioResumidoResponseDTO>>, t: Throwable) {
@@ -120,6 +121,7 @@ class AnunciosActive : AppCompatActivity(), CustomAdapter.OnItemClickListener {
         val retrofitBuilder = Retrofit2Api.getBuilder()
         val retrofitData = retrofitBuilder.buscarAnuncios(query)
 
+        itemsList.clear()
         retrofitData.enqueue(
             object : Callback<List<AnuncioResumidoResponseDTO>> {
                 override fun onFailure(call: Call<List<AnuncioResumidoResponseDTO>>, t: Throwable) {
