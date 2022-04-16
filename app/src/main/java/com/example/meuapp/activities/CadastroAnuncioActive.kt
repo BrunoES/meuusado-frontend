@@ -257,7 +257,7 @@ class CadastroAnuncioActive : AppCompatActivity() {
                     }
                     println("RespostaFim:")
                     if(idAnuncio != null) {
-                        Toast.makeText(applicationContext, "Usuário criado com sucesso.", Toast.LENGTH_LONG).show()
+                        Toast.makeText(applicationContext, "Anúncio criado com sucesso.", Toast.LENGTH_LONG).show()
                         Toast.makeText(applicationContext, "Realize o login.", Toast.LENGTH_LONG).show()
                         val intent = Intent(this@CadastroAnuncioActive, MainActivity::class.java).apply {
                         }
