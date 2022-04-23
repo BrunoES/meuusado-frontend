@@ -1,24 +1,20 @@
 package com.example.meuapp.activities
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.os.Build
+import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.annotation.RequiresApi
-import androidx.core.view.get
+import androidx.appcompat.app.AppCompatActivity
 import com.example.meuapp.MainActivity
 import com.example.meuapp.R
-
-import com.example.meuapp.dtos.response.AnuncioResponseDTO
 import com.example.meuapp.dtos.request.CadastroAnuncioDTO
-import com.example.meuapp.dtos.response.AnuncioResumidoResponseDTO
+import com.example.meuapp.dtos.response.AnuncioResponseDTO
 import com.example.meuapp.dtos.response.MarcaResponseDTO
 import com.example.meuapp.dtos.response.ModeloResponseDTO
-import com.example.meuapp.recicleviews.items.AnuncioItem
 import com.example.meuapp.utils.Retrofit2Api
 import retrofit2.Call
 import retrofit2.Callback
@@ -37,7 +33,12 @@ class CadastroAnuncioActive : AppCompatActivity() {
     lateinit var valor: EditText
     lateinit var btn_add_imagem_cadastro_anuncio: Button
     lateinit var btn_salvar_cadastro_anuncio: Button
-    lateinit var image_view: ImageView
+    lateinit var image_view1: ImageView
+    lateinit var image_view2: ImageView
+    lateinit var image_view3: ImageView
+    lateinit var image_view4: ImageView
+    lateinit var image_view5: ImageView
+    lateinit var image_view6: ImageView
     lateinit var spinner_ano_cadastro_anuncio: Spinner
     lateinit var spinner_marca_cadastro_anuncio: Spinner
     lateinit var spinner_modelo_cadastro_anuncio: Spinner
@@ -53,7 +54,12 @@ class CadastroAnuncioActive : AppCompatActivity() {
 
         btn_add_imagem_cadastro_anuncio = findViewById(R.id.btn_add_imagem_cadastro_anuncio)
         btn_salvar_cadastro_anuncio = findViewById(R.id.btn_salvar_cadastro_anuncio)
-        image_view = findViewById(R.id.imageView)
+        image_view1 = findViewById(R.id.imageView1)
+        image_view2 = findViewById(R.id.imageView2)
+        image_view3 = findViewById(R.id.imageView3)
+        image_view4 = findViewById(R.id.imageView4)
+        image_view5 = findViewById(R.id.imageView5)
+        image_view6 = findViewById(R.id.imageView6)
         spinner_ano_cadastro_anuncio = findViewById(R.id.spinner_ano_cadastro_anuncio)
         spinner_marca_cadastro_anuncio = findViewById(R.id.spinner_marca_cadastro_anuncio)
         spinner_modelo_cadastro_anuncio = findViewById(R.id.spinner_modelo_cadastro_anuncio)
@@ -99,6 +105,7 @@ class CadastroAnuncioActive : AppCompatActivity() {
     private fun pickImageFromGallery() {
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/*"
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         startActivityForResult(intent, IMAGE_PICK_CODE)
     }
 
@@ -126,7 +133,22 @@ class CadastroAnuncioActive : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE) {
-            image_view.setImageURI(data?.data)
+            var count: Int = data?.clipData?.itemCount ?: 0
+            for(i in 0.. count - 1) {
+                if(i == 0) {
+                    image_view1.setImageURI(data?.clipData?.getItemAt(i)?.uri)
+                } else if(i == 1) {
+                    image_view2.setImageURI(data?.clipData?.getItemAt(i)?.uri)
+                } else if(i == 2) {
+                    image_view3.setImageURI(data?.clipData?.getItemAt(i)?.uri)
+                } else if(i == 3) {
+                    image_view4.setImageURI(data?.clipData?.getItemAt(i)?.uri)
+                } else if(i == 4) {
+                    image_view5.setImageURI(data?.clipData?.getItemAt(i)?.uri)
+                } else if(i == 5) {
+                    image_view6.setImageURI(data?.clipData?.getItemAt(i)?.uri)
+                }
+            }
         }
     }
 
@@ -212,8 +234,8 @@ class CadastroAnuncioActive : AppCompatActivity() {
         val valorConversao : String
         valorConversao = valor.text.toString()
 
-        if(image_view.getDrawable() != null) {
-            val bitmapDrawable : BitmapDrawable = image_view.getDrawable() as BitmapDrawable
+        if(image_view1.getDrawable() != null) {
+            val bitmapDrawable : BitmapDrawable = image_view1.getDrawable() as BitmapDrawable
             val bitmap : Bitmap = bitmapDrawable.getBitmap()
             val stream : ByteArrayOutputStream = ByteArrayOutputStream()
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
