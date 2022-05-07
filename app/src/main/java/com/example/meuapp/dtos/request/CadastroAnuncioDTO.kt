@@ -16,5 +16,7 @@ data class CadastroAnuncioDTO(
     @SerializedName("valor")
     val valor: Float,
     @SerializedName("base64Imagem")
-    val base64Imagem: String
+    val base64Imagem: String,
+    @SerializedName("listAnuncioFotosBase64")
+    var listAnuncioFotosBase64: ArrayList<String>
 )

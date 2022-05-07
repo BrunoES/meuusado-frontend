@@ -3,6 +3,7 @@ package com.example.meuapp.activities
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -224,6 +225,19 @@ class CadastroAnuncioActive : AppCompatActivity() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
+    private fun getBase64FromDrawable(drawable: Drawable) : String {
+        var encodedfile : String = ""
+        if(drawable != null) {
+            val bitmapDrawable : BitmapDrawable = drawable as BitmapDrawable
+            val bitmap : Bitmap = bitmapDrawable.getBitmap()
+            val stream : ByteArrayOutputStream = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+            encodedfile = Base64.getEncoder().encodeToString(stream.toByteArray())
+        }
+        return encodedfile
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun cadastroAnuncio() {
 
         Toast.makeText(applicationContext, "Chamou API de Cadastro 1", Toast.LENGTH_LONG).show()
@@ -234,13 +248,7 @@ class CadastroAnuncioActive : AppCompatActivity() {
         val valorConversao : String
         valorConversao = valor.text.toString()
 
-        if(image_view1.getDrawable() != null) {
-            val bitmapDrawable : BitmapDrawable = image_view1.getDrawable() as BitmapDrawable
-            val bitmap : Bitmap = bitmapDrawable.getBitmap()
-            val stream : ByteArrayOutputStream = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-            encodedfile = Base64.getEncoder().encodeToString(stream.toByteArray())
-        }
+        encodedfile = getBase64FromDrawable(image_view1.getDrawable())
 
         /*var byte[] imageInByte = stream.toByteArray()
         ByteArrayInputStream bis = new ByteArrayInputStream(imageInByte);
@@ -251,8 +259,15 @@ class CadastroAnuncioActive : AppCompatActivity() {
         println(encodedfile)
         println("Base64")
 
+        val listAnuncioFotos: ArrayList<String> = ArrayList<String>()
+        listAnuncioFotos.add(getBase64FromDrawable(image_view2.getDrawable()));
+        listAnuncioFotos.add(getBase64FromDrawable(image_view3.getDrawable()));
+        listAnuncioFotos.add(getBase64FromDrawable(image_view4.getDrawable()));
+        listAnuncioFotos.add(getBase64FromDrawable(image_view5.getDrawable()));
+        listAnuncioFotos.add(getBase64FromDrawable(image_view6.getDrawable()));
+
         val cadastroAnuncioDTO = CadastroAnuncioDTO(1L, 1L, titulo.text.toString(), descricao.text.toString(),
-            spinner_ano_cadastro_anuncio.selectedItem as Int, valorConversao.toFloat(), encodedfile)
+            spinner_ano_cadastro_anuncio.selectedItem as Int, valorConversao.toFloat(), encodedfile, listAnuncioFotos)
         val retrofitData = retrofitBuilder.cadastrarAnuncio(cadastroAnuncioDTO)
 
         println("LogInfoInicioCad")
