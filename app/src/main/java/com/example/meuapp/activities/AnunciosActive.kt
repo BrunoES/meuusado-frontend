@@ -1,6 +1,8 @@
 package com.example.meuapp.activities
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -85,11 +87,15 @@ class AnunciosActive : AppCompatActivity(), CustomAdapter.OnItemClickListener {
 
     private fun buscaAnuncios(): List<AnuncioResumidoResponseDTO>? {
         var list : List<AnuncioResumidoResponseDTO>? = null
+        val sharedPreferences : SharedPreferences = getSharedPreferences("tokenPref", Context.MODE_PRIVATE)
+        val token : String = sharedPreferences.getString("token", "").toString()
 
         Toast.makeText(applicationContext, "Chamou API de Busca de Anúncios 1", Toast.LENGTH_LONG).show()
 
+        Toast.makeText(applicationContext, "Token: " + token, Toast.LENGTH_LONG).show()
+
         val retrofitBuilder = Retrofit2Api.getBuilder()
-        val retrofitData = retrofitBuilder.buscarAnuncios()
+        val retrofitData = retrofitBuilder.buscarAnuncios(token)
 
         itemsList.clear()
         retrofitData.enqueue(
@@ -115,11 +121,16 @@ class AnunciosActive : AppCompatActivity(), CustomAdapter.OnItemClickListener {
 
     private fun buscaAnuncios(query : String): List<AnuncioResumidoResponseDTO>? {
         var list : List<AnuncioResumidoResponseDTO>? = null
+        val sharedPreferences : SharedPreferences = getSharedPreferences("tokenPref", Context.MODE_PRIVATE)
+        val token : String = sharedPreferences.getString("token", "").toString()
 
         Toast.makeText(applicationContext, "Chamou API de Busca de Anúncios considerando query: $query", Toast.LENGTH_LONG).show()
 
+        Toast.makeText(applicationContext, "Token: " + token, Toast.LENGTH_LONG).show()
+
         val retrofitBuilder = Retrofit2Api.getBuilder()
-        val retrofitData = retrofitBuilder.buscarAnuncios(query)
+        val retrofitData = retrofitBuilder.buscarAnuncios(token, query)
+        //retrofitData.request().header("Authorization", token)
 
         itemsList.clear()
         retrofitData.enqueue(

@@ -6,10 +6,7 @@ import com.example.meuapp.dtos.request.CadastroUsuarioDTO
 import com.example.meuapp.dtos.request.LoginDTO
 import com.example.meuapp.dtos.response.*
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
+import retrofit2.http.*
 
 interface ApiInterface {
 
@@ -17,13 +14,13 @@ interface ApiInterface {
     fun getData(): Call<List<MyDataItem>>
 
     @GET("api/v1/anuncio")
-    fun buscarAnuncios() : Call<List<AnuncioResumidoResponseDTO>>
+    fun buscarAnuncios(@Header("Authorization") token : String) : Call<List<AnuncioResumidoResponseDTO>>
 
     @GET("api/v1/anuncio/filter/{query}")
-    fun buscarAnuncios(@Path("query") query: String) : Call<List<AnuncioResumidoResponseDTO>>
+    fun buscarAnuncios(@Header("Authorization") token : String, @Path("query") query: String) : Call<List<AnuncioResumidoResponseDTO>>
 
-    @POST("api/v1/login")
-    fun login(@Body loginDTO: LoginDTO) : Call<LoginResponseDTO>
+    @POST("login")
+    fun login(@Body loginDTO: LoginDTO) : Call<String>
 
     @POST("api/v1/usuario")
     fun cadastrarUsuario(@Body cadastroUsuarioDTO: CadastroUsuarioDTO) : Call<UsuarioResponseDTO>

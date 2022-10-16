@@ -1,5 +1,7 @@
 package com.example.meuapp
 
+import android.accounts.AccountManager
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -12,6 +14,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import android.content.Intent
+import android.content.SharedPreferences
 import com.example.meuapp.items.MyDataItem
 import com.example.meuapp.activities.AnunciosActive
 import com.example.meuapp.activities.CadastroUsuarioActive
@@ -75,26 +78,34 @@ class MainActivity : AppCompatActivity() {
         println("LogInfoFim")
 
         retrofitData.enqueue(
-            object : Callback<LoginResponseDTO> {
-                override fun onFailure(call: Call<LoginResponseDTO>, t: Throwable) {
+            object : Callback<String> {
+                override fun onFailure(call: Call<String>, t: Throwable) {
                     Toast.makeText(applicationContext, "Falha ao chamar API de Login", Toast.LENGTH_LONG).show()
+                    println("Erro ao realizar login: " + t.message)
+                    println(t.stackTrace)
                 }
-                override fun onResponse(call: Call<LoginResponseDTO>, response: Response<LoginResponseDTO>) {
-                    var response = response.body()
-                    var logado = false;
+                override fun onResponse(call: Call<String>, response: Response<String>) {
+                    val token = response.body()
+                    val sharedPreferences : SharedPreferences = getSharedPreferences("tokenPref", Context.MODE_PRIVATE)
+                    var editor = sharedPreferences.edit()
 
                     println("RespostaInicio:")
-                    if (response != null) {
-                        println(response.response)
-                        logado = response.response
-                    }
-                    println("RespostaFim:")
-                    println("Logado?: " + logado)
-                    if(logado) {
+                    if (token != null) {
+                        println(token)
+
                         Toast.makeText(applicationContext, "Login realizado com sucesso.", Toast.LENGTH_LONG).show()
                         val intent = Intent(this@MainActivity, AnunciosActive::class.java).apply {
                             putExtra(USER_ID, "1")
                         }
+
+                        Toast.makeText(applicationContext, "Token JWT: " + token, Toast.LENGTH_LONG).show()
+
+                        editor.putString("token", "Bearer " + token)
+                        editor.commit()
+
+                        // Storage token:
+                        // https://stackoverflow.com/questions/34191731/where-to-store-a-jwt-token
+
                         startActivity(intent)
                     } else {
                         Toast.makeText(applicationContext, "Usuário ou Senha Inválidos.", Toast.LENGTH_LONG).show()
