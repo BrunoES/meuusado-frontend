@@ -16,6 +16,7 @@ import com.example.meuapp.R
 import com.example.meuapp.dtos.response.AnuncioResumidoResponseDTO
 import com.example.meuapp.recicleviews.items.AnuncioItem
 import com.example.meuapp.utils.Retrofit2Api
+import com.example.meuapp.utils.TokenUtils
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -87,8 +88,7 @@ class AnunciosActive : AppCompatActivity(), CustomAdapter.OnItemClickListener {
 
     private fun buscaAnuncios(): List<AnuncioResumidoResponseDTO>? {
         var list : List<AnuncioResumidoResponseDTO>? = null
-        val sharedPreferences : SharedPreferences = getSharedPreferences("tokenPref", Context.MODE_PRIVATE)
-        val token : String = sharedPreferences.getString("token", "").toString()
+        val token : String = TokenUtils.getToken(this)
 
         Toast.makeText(applicationContext, "Chamou API de Busca de Anúncios 1", Toast.LENGTH_LONG).show()
 
@@ -121,8 +121,11 @@ class AnunciosActive : AppCompatActivity(), CustomAdapter.OnItemClickListener {
 
     private fun buscaAnuncios(query : String): List<AnuncioResumidoResponseDTO>? {
         var list : List<AnuncioResumidoResponseDTO>? = null
-        val sharedPreferences : SharedPreferences = getSharedPreferences("tokenPref", Context.MODE_PRIVATE)
-        val token : String = sharedPreferences.getString("token", "").toString()
+
+        //val sharedPreferences : SharedPreferences = getSharedPreferences("tokenPref", Context.MODE_PRIVATE)
+        //val token : String = sharedPreferences.getString("token", "").toString()
+
+        val token : String = TokenUtils.getToken(this)
 
         Toast.makeText(applicationContext, "Chamou API de Busca de Anúncios considerando query: $query", Toast.LENGTH_LONG).show()
 

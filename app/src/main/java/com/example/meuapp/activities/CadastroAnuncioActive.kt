@@ -17,6 +17,7 @@ import com.example.meuapp.dtos.response.AnuncioResponseDTO
 import com.example.meuapp.dtos.response.MarcaResponseDTO
 import com.example.meuapp.dtos.response.ModeloResponseDTO
 import com.example.meuapp.utils.Retrofit2Api
+import com.example.meuapp.utils.TokenUtils
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -165,11 +166,12 @@ class CadastroAnuncioActive : AppCompatActivity() {
     private fun buscarMarcas() {
         val listSpinner: MutableList<MarcaResponseDTO> = ArrayList<MarcaResponseDTO>()
         var arrayAdapterMarca : ArrayAdapter<MarcaResponseDTO> = ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, listSpinner)
+        val token : String = TokenUtils.getToken(this)
 
         Toast.makeText(applicationContext, "Chamou API de Busca de Marcas 1", Toast.LENGTH_LONG).show()
 
         val retrofitBuilder = Retrofit2Api.getBuilder()
-        val retrofitData = retrofitBuilder.buscarMarcas()
+        val retrofitData = retrofitBuilder.buscarMarcas(token)
 
         retrofitData.enqueue(
             object : Callback<List<MarcaResponseDTO>> {
@@ -196,11 +198,12 @@ class CadastroAnuncioActive : AppCompatActivity() {
     private fun buscarModelos(idMarca : Long) {
         val listSpinner: MutableList<ModeloResponseDTO> = ArrayList<ModeloResponseDTO>()
         var arrayAdapterModelo : ArrayAdapter<ModeloResponseDTO> = ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, listSpinner)
+        val token : String = TokenUtils.getToken(this)
 
         Toast.makeText(applicationContext, "Chamou API de Busca de Marcas 1", Toast.LENGTH_LONG).show()
 
         val retrofitBuilder = Retrofit2Api.getBuilder()
-        val retrofitData = retrofitBuilder.buscarModelosPorMarca(idMarca)
+        val retrofitData = retrofitBuilder.buscarModelosPorMarca(token, idMarca)
 
         retrofitData.enqueue(
             object : Callback<List<ModeloResponseDTO>> {
@@ -239,6 +242,7 @@ class CadastroAnuncioActive : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun cadastroAnuncio() {
+        val token : String = TokenUtils.getToken(this)
 
         Toast.makeText(applicationContext, "Chamou API de Cadastro 1", Toast.LENGTH_LONG).show()
 
@@ -268,7 +272,7 @@ class CadastroAnuncioActive : AppCompatActivity() {
 
         val cadastroAnuncioDTO = CadastroAnuncioDTO(1L, 1L, titulo.text.toString(), descricao.text.toString(),
             spinner_ano_cadastro_anuncio.selectedItem as Int, valorConversao.toFloat(), encodedfile, listAnuncioFotos)
-        val retrofitData = retrofitBuilder.cadastrarAnuncio(cadastroAnuncioDTO)
+        val retrofitData = retrofitBuilder.cadastrarAnuncio(token, cadastroAnuncioDTO)
 
         println("LogInfoInicioCad")
         println(retrofitData.request().url())

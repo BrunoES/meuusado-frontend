@@ -8,18 +8,20 @@
 
     <ImageView
         android:id="@+id/img_detalhe_anuncio"
-        android:layout_width="362dp"
-        android:layout_height="355dp"
-        android:layout_marginTop="24dp"
+        android:layout_width="355dp"
+        android:layout_height="234dp"
         android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.489"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.071"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/txt_valor_detalhe_anuncio"
-        android:layout_width="361dp"
+        android:layout_width="340dp"
         android:layout_height="31dp"
         android:layout_marginTop="8dp"
         android:fontFamily="@font/amiko"
@@ -31,9 +33,9 @@
 
     <TextView
         android:id="@+id/txt_titulo_detalhe_anuncio"
-        android:layout_width="361dp"
+        android:layout_width="340dp"
         android:layout_height="33dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="20dp"
         android:fontFamily="@font/amiko"
         android:text="teste"
         android:textSize="20sp"
@@ -43,25 +45,29 @@
 
     <TextView
         android:id="@+id/txt_ano_detalhe_anuncio"
-        android:layout_width="361dp"
+        android:layout_width="340dp"
         android:layout_height="30dp"
-        android:layout_marginTop="48dp"
         android:fontFamily="@font/amiko"
         android:text="2015"
         android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/txt_descricao_detalhe_anuncio"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_valor_detalhe_anuncio" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_titulo_detalhe_anuncio"
+        app:layout_constraintVertical_bias="0.318" />
 
     <TextView
         android:id="@+id/txt_descricao_detalhe_anuncio"
-        android:layout_width="361dp"
-        android:layout_height="115dp"
+        android:layout_width="340dp"
+        android:layout_height="120dp"
         android:layout_marginTop="48dp"
         android:fontFamily="@font/amiko"
         android:text="Carro muito bom pouco rodado."
         android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_titulo_detalhe_anuncio" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_titulo_detalhe_anuncio"
+        app:layout_constraintVertical_bias="0.019" />
 </androidx.constraintlayout.widget.ConstraintLayout>

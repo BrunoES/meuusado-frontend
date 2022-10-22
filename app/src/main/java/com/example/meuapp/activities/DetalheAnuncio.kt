@@ -19,6 +19,7 @@ import com.example.meuapp.dtos.response.AnuncioResponseDTO
 import com.example.meuapp.dtos.response.UsuarioResponseDTO
 import com.example.meuapp.utils.Constants
 import com.example.meuapp.utils.Retrofit2Api
+import com.example.meuapp.utils.TokenUtils
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -49,6 +50,7 @@ class DetalheAnuncio : AppCompatActivity() {
     }
 
     private fun buscaDetalhesAnuncio(anuncioId: Int) {
+        val token : String = TokenUtils.getToken(this)
 
         Toast.makeText(applicationContext, "Chamou API de busca de detalhes de Anúncio 1", Toast.LENGTH_LONG).show()
 
@@ -56,7 +58,7 @@ class DetalheAnuncio : AppCompatActivity() {
 
         Toast.makeText(applicationContext, "Chamou API de busca de detalhes de Anúncio ", Toast.LENGTH_LONG).show()
 
-        val retrofitData = retrofitBuilder.buscaDetalhesAnuncio(anuncioId)
+        val retrofitData = retrofitBuilder.buscaDetalhesAnuncio(token, anuncioId)
 
         println("LogInfoInicioDetalhe")
         println(retrofitData.request().url())
