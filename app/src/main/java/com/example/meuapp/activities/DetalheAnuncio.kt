@@ -20,6 +20,8 @@ import com.example.meuapp.dtos.response.UsuarioResponseDTO
 import com.example.meuapp.utils.Constants
 import com.example.meuapp.utils.Retrofit2Api
 import com.example.meuapp.utils.TokenUtils
+import com.synnapps.carouselview.CarouselView
+import com.synnapps.carouselview.ImageListener
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -33,6 +35,7 @@ class DetalheAnuncio : AppCompatActivity() {
     lateinit var descricao: TextView
     lateinit var txt_ano_detalhe_anuncio: TextView
     lateinit var image_view: ImageView
+    lateinit var carouselView : CarouselView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,8 +46,14 @@ class DetalheAnuncio : AppCompatActivity() {
         descricao = findViewById(R.id.txt_descricao_detalhe_anuncio)
         txt_ano_detalhe_anuncio = findViewById(R.id.txt_ano_detalhe_anuncio)
         image_view = findViewById(R.id.img_detalhe_anuncio)
+        carouselView = findViewById(R.id.carouselView)
+        carouselView.pageCount = 6
 
         val anuncioId = intent.getStringExtra("anuncio_id")
+
+        var imageListener = ImageListener {
+            position, imageView -> imageView.setImageResource(R.drawable.one)
+        }
 
         buscaDetalhesAnuncio(Integer.parseInt(anuncioId))
     }
