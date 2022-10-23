@@ -34,28 +34,39 @@ class DetalheAnuncio : AppCompatActivity() {
     lateinit var titulo: TextView
     lateinit var descricao: TextView
     lateinit var txt_ano_detalhe_anuncio: TextView
-    lateinit var image_view: ImageView
     lateinit var carouselView : CarouselView
+    var imageArray:ArrayList<Drawable> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detalhe_anuncio)
 
+        var byteImage : ByteArray? = Base64.getDecoder().decode(Constants.BLANK_IMAGE)
+        var image: Drawable = BitmapDrawable(byteImage?.let { BitmapFactory.decodeByteArray(byteImage, 0, it.size) })
+        imageArray.add(image)
+        imageArray.add(image)
+        imageArray.add(image)
+        imageArray.add(image)
+        imageArray.add(image)
+        imageArray.add(image)
+
+        val anuncioId = intent.getStringExtra("anuncio_id")
+        buscaDetalhesAnuncio(Integer.parseInt(anuncioId))
+
         valor = findViewById(R.id.txt_valor_detalhe_anuncio)
         titulo = findViewById(R.id.txt_titulo_detalhe_anuncio)
         descricao = findViewById(R.id.txt_descricao_detalhe_anuncio)
         txt_ano_detalhe_anuncio = findViewById(R.id.txt_ano_detalhe_anuncio)
-        image_view = findViewById(R.id.img_detalhe_anuncio)
+
         carouselView = findViewById(R.id.carouselView)
         carouselView.pageCount = 6
+        carouselView.setImageListener(imageListener)
+        carouselView.stopCarousel()
+    }
 
-        val anuncioId = intent.getStringExtra("anuncio_id")
 
-        var imageListener = ImageListener {
-            position, imageView -> imageView.setImageResource(R.drawable.one)
-        }
-
-        buscaDetalhesAnuncio(Integer.parseInt(anuncioId))
+    var imageListener = ImageListener {
+        position, imageView -> imageView.setImageDrawable(imageArray[position])
     }
 
     private fun buscaDetalhesAnuncio(anuncioId: Int) {
@@ -76,6 +87,33 @@ class DetalheAnuncio : AppCompatActivity() {
         println(retrofitData.request().body())
         println("LogInfoFimDetalhe")
 
+        /*
+        var res : Response<AnuncioResponseDTO> = retrofitData.execute()
+        if(res != null) {
+            var response = res.body()
+            var base64Imagem = ""
+            if (response != null) {
+                if (response.base64Imagem.isNullOrEmpty()) {
+                    base64Imagem = Constants.BLANK_IMAGE
+                } else {
+                    base64Imagem = response.base64Imagem
+                }
+            }
+
+            if (response != null) {
+                valor.setText("R$ " + NumberFormat.getNumberInstance(Locale.US).format(response.valor).toString().replace(",", "."))
+                titulo.setText(response.titulo)
+                descricao.setText(response.descricao)
+                txt_ano_detalhe_anuncio.setText(response.ano.toString())
+
+                var byteImage : ByteArray? = Base64.getDecoder().decode(base64Imagem)
+                var image: Drawable = BitmapDrawable(byteImage?.let { BitmapFactory.decodeByteArray(byteImage, 0, it.size) })
+
+                image_view.setImageDrawable(image)
+                imageArray.add(0, image)
+            }
+        }*/
+
         retrofitData.enqueue(
             object : Callback<AnuncioResponseDTO> {
                 override fun onFailure(call: Call<AnuncioResponseDTO>, t: Throwable) {
@@ -94,15 +132,33 @@ class DetalheAnuncio : AppCompatActivity() {
                     }
 
                     if (response != null) {
+                        var listAnuncioFotosBase64 : List<String> = response.listAnuncioFotosBase64
                         valor.setText("R$ " + NumberFormat.getNumberInstance(Locale.US).format(response.valor).toString().replace(",", "."))
                         titulo.setText(response.titulo)
                         descricao.setText(response.descricao)
                         txt_ano_detalhe_anuncio.setText(response.ano.toString())
 
+                        /*
                         var byteImage : ByteArray? = Base64.getDecoder().decode(base64Imagem)
                         var image: Drawable = BitmapDrawable(byteImage?.let { BitmapFactory.decodeByteArray(byteImage, 0, it.size) })
-
                         image_view.setImageDrawable(image)
+                        */
+
+                        var x : String = ""
+                        var byteImage: ByteArray? = Base64.getDecoder().decode(x)
+                        var image: Drawable = BitmapDrawable(byteImage?.let { BitmapFactory.decodeByteArray(byteImage, 0, it.size ) })
+                        val add = imageArray.add(image)
+                        carouselView.pageCount = carouselView.pageCount + 1
+
+                        imageArray.clear()
+
+                        for(foto in listAnuncioFotosBase64) {
+                            var byteImage: ByteArray? = Base64.getDecoder().decode(foto)
+                            var image: Drawable = BitmapDrawable(byteImage?.let { BitmapFactory.decodeByteArray(byteImage, 0, it.size ) })
+                            imageArray.add(image)
+                        }
+                        carouselView.pageCount = listAnuncioFotosBase64.size
+                        carouselView.playCarousel()
                     }
                 }
             }

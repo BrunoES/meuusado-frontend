@@ -21,5 +21,7 @@ data class AnuncioResponseDTO(
     @SerializedName("dataCriacao")
     val dataCriacao: Date,
     @SerializedName("base64Imagem")
-    val base64Imagem: String
+    val base64Imagem: String,
+    @SerializedName("listAnuncioFotosBase64")
+    val listAnuncioFotosBase64: List<String>
 )
