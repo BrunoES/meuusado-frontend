@@ -25,6 +25,9 @@ interface ApiInterface {
     @GET("api/v1/anuncio/filter/{query}")
     fun buscarAnuncios(@Header("Authorization") token : String, @Path("query") query: String) : Call<List<AnuncioResumidoResponseDTO>>
 
+    @GET("api/v1/anuncio/location/{coordinates}")
+    fun buscarAnunciosPorLocation(@Header("Authorization") token : String, @Path("coordinates") coordinates: String) : Call<List<AnuncioResumidoResponseDTO>>
+
     @POST("api/v1/anuncio")
     fun cadastrarAnuncio(@Header("Authorization") token : String, @Body cadastroAnuncioDTO: CadastroAnuncioDTO) : Call<AnuncioResponseDTO>
 

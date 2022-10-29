@@ -18,5 +18,7 @@ data class CadastroAnuncioDTO(
     @SerializedName("base64Imagem")
     val base64Imagem: String,
     @SerializedName("listAnuncioFotosBase64")
-    var listAnuncioFotosBase64: ArrayList<String>
+    var listAnuncioFotosBase64: ArrayList<String>,
+    @SerializedName("coordinates")
+    val coordinates: String
 )
