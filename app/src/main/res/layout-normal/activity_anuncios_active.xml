@@ -9,15 +9,17 @@
 
     <Button
         android:id="@+id/btn_cadastrar_anuncio"
-        android:layout_width="336dp"
-        android:layout_height="46dp"
+        android:layout_width="356dp"
+        android:layout_height="66dp"
+        android:fontFamily="sans-serif"
         android:text="Criar Anúncio"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintHorizontal_bias="0.49"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.039" />
+        app:layout_constraintVertical_bias="0.024" />
 
     <SearchView
         android:id="@+id/txt_pesquisa_anuncios"
@@ -28,19 +30,19 @@
         app:layout_constraintHorizontal_bias="0.49"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.153">
+        app:layout_constraintVertical_bias="0.139">
 
     </SearchView>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
-        android:layout_width="356dp"
-        android:layout_height="480dp"
+        android:layout_width="386dp"
+        android:layout_height="577dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.724"
+        app:layout_constraintVertical_bias="0.954"
         tools:listitem="@layout/item" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

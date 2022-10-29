@@ -138,19 +138,12 @@ class DetalheAnuncio : AppCompatActivity() {
                         descricao.setText(response.descricao)
                         txt_ano_detalhe_anuncio.setText(response.ano.toString())
 
-                        /*
-                        var byteImage : ByteArray? = Base64.getDecoder().decode(base64Imagem)
-                        var image: Drawable = BitmapDrawable(byteImage?.let { BitmapFactory.decodeByteArray(byteImage, 0, it.size) })
-                        image_view.setImageDrawable(image)
-                        */
-
-                        var x : String = ""
-                        var byteImage: ByteArray? = Base64.getDecoder().decode(x)
-                        var image: Drawable = BitmapDrawable(byteImage?.let { BitmapFactory.decodeByteArray(byteImage, 0, it.size ) })
-                        val add = imageArray.add(image)
-                        carouselView.pageCount = carouselView.pageCount + 1
 
                         imageArray.clear()
+
+                        var byteImg : ByteArray? = Base64.getDecoder().decode(base64Imagem)
+                        var img: Drawable = BitmapDrawable(byteImg?.let { BitmapFactory.decodeByteArray(byteImg, 0, it.size) })
+                        imageArray.add(img)
 
                         for(foto in listAnuncioFotosBase64) {
                             var byteImage: ByteArray? = Base64.getDecoder().decode(foto)

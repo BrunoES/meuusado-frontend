@@ -1,13 +1,19 @@
 package com.example.meuapp.activities
 
+import android.Manifest
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.*
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.example.meuapp.MainActivity
@@ -45,9 +51,12 @@ class CadastroAnuncioActive : AppCompatActivity() {
     lateinit var spinner_marca_cadastro_anuncio: Spinner
     lateinit var spinner_modelo_cadastro_anuncio: Spinner
 
+
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        var locationManager : LocationManager = getSystemService(LOCATION_SERVICE) as LocationManager
         setContentView(R.layout.activity_cadastro_anuncio_active)
 
         titulo = findViewById(R.id.txt_titulo_cadastro_anuncio)
@@ -99,9 +108,48 @@ class CadastroAnuncioActive : AppCompatActivity() {
             cadastroAnuncio()
         }
 
+        val locationPermissionRequest = registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+            when {
+                permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) -> {
+                    requestLocation(locationManager)
+                }
+                permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
+                    requestLocation(locationManager)
+                } else -> {
+                    Log.d("myTag", "Erro ao acessar localização.")
+                }
+            }
+        }
+
+        locationPermissionRequest.launch(arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION))
+
         buscarMarcas()
         alimentaAnos()
         //buscarModelos(37L)
+    }
+
+    private fun requestLocation (locationManager : LocationManager) {
+        try {
+            // Request location updates
+            locationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0L, 0f, locationListener)
+        } catch(ex: SecurityException) {
+            Log.d("myTag", "Security Exception, no location available: " + ex.stackTrace)
+            Toast.makeText(applicationContext, "" + ex.stackTrace, Toast.LENGTH_LONG).show()
+        }
+    }
+
+    //define the listener
+    private val locationListener: LocationListener = object : LocationListener {
+        override fun onLocationChanged(location: Location) {
+            Toast.makeText(applicationContext, "" + location.longitude + ":" + location.latitude, Toast.LENGTH_LONG).show()
+        }
+        override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
+        override fun onProviderEnabled(provider: String) {}
+        override fun onProviderDisabled(provider: String) {}
     }
 
     private fun pickImageFromGallery() {
@@ -262,6 +310,8 @@ class CadastroAnuncioActive : AppCompatActivity() {
         println("Base64")
         println(encodedfile)
         println("Base64")
+
+        image_view2.getDrawable().minimumWidth
 
         val listAnuncioFotos: ArrayList<String> = ArrayList<String>()
         listAnuncioFotos.add(getBase64FromDrawable(image_view2.getDrawable()));
