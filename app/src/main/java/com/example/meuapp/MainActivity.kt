@@ -43,8 +43,12 @@ class MainActivity : AppCompatActivity() {
 
     private var locationManager : LocationManager? = null
 
+    var login = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
 
         setContentView(R.layout.activity_main)
         campo1 = findViewById(R.id.txt_nome)
@@ -76,9 +80,15 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(applicationContext, "" + location.longitude + ":" + location.latitude, Toast.LENGTH_LONG).show()
             val sharedPreferences : SharedPreferences = getSharedPreferences("meuUsadoPref", Context.MODE_PRIVATE)
             var editor = sharedPreferences.edit()
-            editor.putString("latitude", location.latitude.toString())
-            editor.putString("longitude", location.longitude.toString())
-            callAnunciosActivity()
+            //editor.putString("latitude", location.latitude.toString())
+            //editor.putString("longitude", location.longitude.toString())
+            // Mock:
+            editor.putString("latitude", "-23.3383")
+            editor.putString("longitude", "-52.0887")
+            editor.commit()
+
+            if(login) callAnunciosActivity()
+            login = false
         }
         override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
         }
@@ -107,7 +117,8 @@ class MainActivity : AppCompatActivity() {
     private fun requestLocation (locationManager : LocationManager) {
         try {
             // Request location updates
-            locationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0L, 0f, locationListener)
+            locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000L, 1000.0f, locationListener)
+            locationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000L, 1000.0f, locationListener)
         } catch(ex: SecurityException) {
             Log.d("myTag", "Security Exception, no location available: " + ex.stackTrace)
             Toast.makeText(applicationContext, "" + ex.stackTrace, Toast.LENGTH_LONG).show()
@@ -115,9 +126,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initGeolocation() {
-        val lm = getSystemService(LOCATION_SERVICE) as LocationManager
-        var geoLocateDisabled : Boolean = !lm.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
-                !lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+        var geoLocateDisabled : Boolean = !locationManager?.isProviderEnabled(LocationManager.GPS_PROVIDER)!! ||
+                !locationManager?.isProviderEnabled(LocationManager.NETWORK_PROVIDER)!!
 
         if (geoLocateDisabled) {
             requestTurnOnLocation()
@@ -132,9 +142,9 @@ class MainActivity : AppCompatActivity() {
     private fun requestTurnOnLocation() {
         // Build the alert dialog
         val builder: AlertDialog.Builder = AlertDialog.Builder(this)
-        builder.setTitle("Location Services Not Active")
-        builder.setMessage("Please enable Location Services and GPS")
-        builder.setPositiveButton("OK",
+        builder.setTitle("Hummm, sua localização está desligada")
+        builder.setMessage("Ative sua localização para ver os anúncios perto de você")
+        builder.setPositiveButton("Ligar",
             DialogInterface.OnClickListener { dialogInterface, i -> // Show location settings when the user acknowledges the alert dialog
                 val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
                 startActivity(intent)
