@@ -5,64 +5,108 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Toast
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import android.content.Intent
 import android.content.SharedPreferences
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Build
+import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
+import android.view.View
+import android.widget.Button
+import android.widget.EditText
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import com.example.meuapp.items.MyDataItem
+import androidx.appcompat.app.AppCompatActivity
 import com.example.meuapp.activities.AnunciosActive
 import com.example.meuapp.activities.CadastroUsuarioActive
 import com.example.meuapp.dtos.request.LoginDTO
+import com.example.meuapp.items.MyDataItem
 import com.example.meuapp.utils.ApiInterface
 import com.example.meuapp.utils.Retrofit2Api
+import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
+import com.facebook.login.LoginManager
+import com.facebook.login.LoginResult
+import com.facebook.login.widget.LoginButton
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import java.util.*
+
 
 class MainActivity : AppCompatActivity() {
     private val USER_ID = "user_id"
 
-    lateinit var campo1: EditText
     lateinit var email: EditText
     lateinit var password: EditText
     lateinit var botao1: Button
     lateinit var botao2: Button
+    lateinit var botao_login_facebook: Button
+    //lateinit var loginButton: LoginButton
 
     private var locationManager : LocationManager? = null
+    private val EMAIL = "email"
 
     var login = true
+    lateinit var callbackManager : CallbackManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        callbackManager = CallbackManager.Factory.create();
+
+        /*
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
+        */
+
+        //loginButton = findViewById(R.id.login_button)
+        //loginButton.setReadPermissions(Arrays.asList(EMAIL));
+
         locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
 
         setContentView(R.layout.activity_main)
-        campo1 = findViewById(R.id.txt_nome)
         botao1 = findViewById(R.id.btn_nome)
         botao2 = findViewById(R.id.btn_cadastre_se)
+        botao_login_facebook = findViewById(R.id.btn_login_facebook)
 
         email = findViewById(R.id.txt_email)
         password = findViewById(R.id.txt_password)
-
 
         botao1.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
                 login()
             }
+        })
+
+        botao_login_facebook.setOnClickListener(View.OnClickListener {
+            // Login
+            callbackManager = CallbackManager.Factory.create()
+            LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "email"))
+            LoginManager.getInstance().registerCallback(callbackManager,
+                object : FacebookCallback<LoginResult> {
+                    override fun onSuccess(loginResult: LoginResult) {
+                        //loginResult.recentlyGrantedPermissions.toString()
+                        Log.d("MainActivity", "Facebook token: " + loginResult.accessToken.token)
+                        startActivity(Intent(applicationContext, AnunciosActive::class.java))
+                    }
+
+                    override fun onCancel() {
+                        Log.d("MainActivity", "Facebook onCancel.")
+
+                    }
+
+                    override fun onError(error: FacebookException) {
+                        Log.d("MainActivity", "Facebook onError.")
+
+                    }
+                })
         })
 
         botao2.setOnClickListener(object : View.OnClickListener {
@@ -73,6 +117,42 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         })
+
+        /*
+        loginButton.registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
+            override fun onSuccess(loginResult: LoginResult) {
+                // App code
+            }
+
+            override fun onCancel() {
+                // App code
+            }
+
+            override fun onError(exception: FacebookException) {
+                // App code
+            }
+        })
+        */
+
+        LoginManager.getInstance().registerCallback(callbackManager,
+            object : FacebookCallback<LoginResult> {
+                override fun onSuccess(loginResult: LoginResult) {
+                    println(loginResult.accessToken)
+                }
+
+                override fun onCancel() {
+                    // App code
+                }
+
+                override fun onError(exception: FacebookException) {
+                    // App code
+                }
+            })
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        callbackManager.onActivityResult(requestCode, resultCode, data)
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     private val locationListener: LocationListener = object : LocationListener {
@@ -208,33 +288,4 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun getMyData() {
-        val retrofitBuilder = Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl("https://jsonplaceholder.typicode.com/")
-            .build()
-            .create(ApiInterface::class.java)
-
-
-        Toast.makeText(applicationContext, "Chamou API", Toast.LENGTH_LONG).show()
-
-        val retrofitData = retrofitBuilder.getData()
-
-        retrofitData.enqueue(object : Callback<List<MyDataItem>?> {
-            override fun onResponse(call: Call<List<MyDataItem>?>, response: Response<List<MyDataItem>?>) {
-                Toast.makeText(applicationContext, "Começou ler retorno da API", Toast.LENGTH_LONG).show()
-                val responseBody = response.body()!!
-                var myStringBuilder = StringBuilder()
-
-                for (myData in responseBody) {
-                    myStringBuilder.append(myData.id)
-                    myStringBuilder.append("\n")
-                }
-                campo1.setText(myStringBuilder)
-            }
-            override fun onFailure(call: Call<List<MyDataItem>?>, t: Throwable) {
-                TODO("Not yet implemented")
-            }
-        })
-    }
 }
