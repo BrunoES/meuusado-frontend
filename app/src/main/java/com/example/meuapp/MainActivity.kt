@@ -22,21 +22,16 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.example.meuapp.activities.AnunciosActive
 import com.example.meuapp.activities.CadastroUsuarioActive
+import com.example.meuapp.dtos.request.CadastroUsuarioDTO
 import com.example.meuapp.dtos.request.LoginDTO
-import com.example.meuapp.items.MyDataItem
-import com.example.meuapp.utils.ApiInterface
+import com.example.meuapp.dtos.response.UsuarioResponseDTO
 import com.example.meuapp.utils.Retrofit2Api
-import com.facebook.CallbackManager
-import com.facebook.FacebookCallback
-import com.facebook.FacebookException
+import com.facebook.*
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
-import com.facebook.login.widget.LoginButton
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
 
 
@@ -48,7 +43,6 @@ class MainActivity : AppCompatActivity() {
     lateinit var botao1: Button
     lateinit var botao2: Button
     lateinit var botao_login_facebook: Button
-    //lateinit var loginButton: LoginButton
 
     private var locationManager : LocationManager? = null
     private val EMAIL = "email"
@@ -60,15 +54,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         callbackManager = CallbackManager.Factory.create();
-
-        /*
-        FacebookSdk.sdkInitialize(getApplicationContext());
-        AppEventsLogger.activateApp(this);
-        */
-
-        //loginButton = findViewById(R.id.login_button)
-        //loginButton.setReadPermissions(Arrays.asList(EMAIL));
-
         locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
 
         setContentView(R.layout.activity_main)
@@ -81,32 +66,134 @@ class MainActivity : AppCompatActivity() {
 
         botao1.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
-                login()
+                login(email.text.toString(), password.text.toString())
             }
         })
+
+        val accessToken = AccessToken.getCurrentAccessToken()
+        val isLoggedIn = accessToken != null && !accessToken.isExpired
+        if(isLoggedIn) {
+            val graphRequest = GraphRequest.newMeRequest(accessToken) { `object`, response ->
+                var email = ""
+
+                try {
+                    //here is the data that you want
+                    Log.d("FBLOGIN_JSON_RES", `object`.toString())
+                    if (`object` != null) {
+                        if (`object`.has("email")) {
+                            email = `object`.getString("email")
+                        }
+
+                        if(!email.isEmpty() ) {
+                            login(email, "")
+                        } else {
+                            Log.e("FBLOGIN_FAILD", `object`.toString())
+                        }
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+
+            login(email.text.toString(), password.text.toString())
+        }
 
         botao_login_facebook.setOnClickListener(View.OnClickListener {
             // Login
             callbackManager = CallbackManager.Factory.create()
             LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "email"))
-            LoginManager.getInstance().registerCallback(callbackManager,
-                object : FacebookCallback<LoginResult> {
-                    override fun onSuccess(loginResult: LoginResult) {
-                        //loginResult.recentlyGrantedPermissions.toString()
-                        Log.d("MainActivity", "Facebook token: " + loginResult.accessToken.token)
-                        startActivity(Intent(applicationContext, AnunciosActive::class.java))
+            LoginManager.getInstance().registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
+                override fun onSuccess(loginResult: LoginResult) {
+                    //loginResult.recentlyGrantedPermissions.toString()
+                    //var profile : Profile? = Profile.getCurrentProfile()
+
+                    var profile : Profile? = ProfileManager.getInstance().currentProfile
+
+                    if (profile != null) {
+                        Log.d("MainActivity", "Facebook token: " + profile.toJSONObject())
                     }
 
-                    override fun onCancel() {
-                        Log.d("MainActivity", "Facebook onCancel.")
+                    Log.d("MainActivity", "Facebook token: " + loginResult.accessToken.token)
 
+                    val graphRequest = GraphRequest.newMeRequest(loginResult.accessToken) { `object`, response ->
+                        var id = ""
+                        var nome = ""
+                        var email = ""
+
+                        try {
+                            //here is the data that you want
+                            Log.d("FBLOGIN_JSON_RES", `object`.toString())
+                            if (`object` != null) {
+                                if (`object`.has("id")) {
+                                    id = `object`.getString("id")
+                                }
+                                if (`object`.has("name")) {
+                                    nome = `object`.getString("name")
+                                }
+                                if (`object`.has("email")) {
+                                    email = `object`.getString("email")
+                                }
+
+                                if(!id.isEmpty() && !nome.isEmpty() && !email.isEmpty() ) {
+                                    val retrofitBuilder = Retrofit2Api.getBuilder()
+
+                                    val cadastroUsuarioDTO = CadastroUsuarioDTO(nome, email, "")
+                                    val retrofitData = retrofitBuilder.cadastrarUsuario(cadastroUsuarioDTO)
+
+                                    retrofitData.enqueue(
+                                        object : Callback<UsuarioResponseDTO> {
+                                            override fun onFailure(call: Call<UsuarioResponseDTO>, t: Throwable) {
+                                                Toast.makeText(applicationContext, "Falha ao chamar API de Cadastro", Toast.LENGTH_LONG).show()
+                                            }
+                                            override fun onResponse(call: Call<UsuarioResponseDTO>, response: Response<UsuarioResponseDTO>) {
+                                                var response = response.body()
+                                                var idUsuario : Long = 0L
+                                                var email : String = ""
+                                                var password : String = ""
+
+                                                println("RespostaInicio:")
+                                                if (response != null) {
+                                                    idUsuario = response.idUsuario
+                                                    email = response.email
+                                                    password = response.password
+                                                    println(response.idUsuario)
+                                                }
+                                                println("RespostaFim:")
+                                                if(!idUsuario.equals(0L)) {
+                                                    Toast.makeText(applicationContext, "Usuário criado com sucesso.", Toast.LENGTH_LONG).show()
+                                                    Toast.makeText(applicationContext, "Realizando login.", Toast.LENGTH_LONG).show()
+                                                    login(email, password)
+                                                } else {
+                                                    Toast.makeText(applicationContext, "Erro ao criar usuário.", Toast.LENGTH_LONG).show()
+                                                }
+                                            }
+                                        }
+                                    )
+                                } else {
+                                    Log.e("FBLOGIN_FAILD", `object`.toString())
+                                }
+                            }
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
                     }
 
-                    override fun onError(error: FacebookException) {
-                        Log.d("MainActivity", "Facebook onError.")
+                    val parameters = Bundle()
+                    parameters.putString("fields", "name,email,id")
+                    graphRequest.parameters = parameters
+                    graphRequest.executeAsync()
 
-                    }
-                })
+                    // startActivity(Intent(applicationContext, AnunciosActive::class.java))
+                }
+
+                override fun onCancel() {
+                    Log.d("MainActivity", "Facebook onCancel.")
+                }
+
+                override fun onError(error: FacebookException) {
+                    Log.d("MainActivity", "Facebook onError.")
+                }
+            })
         })
 
         botao2.setOnClickListener(object : View.OnClickListener {
@@ -117,22 +204,6 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         })
-
-        /*
-        loginButton.registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
-            override fun onSuccess(loginResult: LoginResult) {
-                // App code
-            }
-
-            override fun onCancel() {
-                // App code
-            }
-
-            override fun onError(exception: FacebookException) {
-                // App code
-            }
-        })
-        */
 
         LoginManager.getInstance().registerCallback(callbackManager,
             object : FacebookCallback<LoginResult> {
@@ -234,7 +305,7 @@ class MainActivity : AppCompatActivity() {
         alertDialog.show()
     }
 
-    private fun login() {
+    private fun login(email : String, password : String) {
 
         Toast.makeText(applicationContext, "Chamou API de Login 2", Toast.LENGTH_LONG).show()
 
@@ -242,7 +313,7 @@ class MainActivity : AppCompatActivity() {
 
         Toast.makeText(applicationContext, "Chamou API de Login 2", Toast.LENGTH_LONG).show()
 
-        val loginDto = LoginDTO(email.text.toString(), password.text.toString())
+        val loginDto = LoginDTO(email, password)
         val retrofitData = retrofitBuilder.login(loginDto)
 
         println("LogInfoInicio")

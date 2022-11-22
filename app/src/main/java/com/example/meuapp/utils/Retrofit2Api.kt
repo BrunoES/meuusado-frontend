@@ -10,8 +10,8 @@ import java.util.concurrent.TimeUnit
 class Retrofit2Api {
 
     companion object {
-        //private val URL_BASE = "http://10.0.0.121:9003/"
-        private val URL_BASE = "https://fe2acef7-3e1d-4612-9536-11d1fd219f60.mock.pstmn.io/"
+        private val URL_BASE = "http://10.0.0.121:9003/"
+        //private val URL_BASE = "https://fe2acef7-3e1d-4612-9536-11d1fd219f60.mock.pstmn.io/"
         private val DEFAULT_TIMEOUT = 240L
 
         fun getBuilder(): ApiInterface {
